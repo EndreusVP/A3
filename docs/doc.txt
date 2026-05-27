@@ -1,0 +1,107 @@
+linguagem -> py
+
+obj: 
+-> cadastro de clientes
+-> login de usuários
+-> registro de pedidos
+-> controle de dívidas
+-> visualização de histórico de compras
+-> relatórios simples de vendas
+
+funcionalidade: 
+-> O vendedor realiza login no sistema
+-> Escolhe um cliente já cadastrado ou cria um novo cadastro
+-> Registra o pedido do cliente
+-> O sistema adiciona o valor do pedido na dívida do cliente
+-> O vendedor pode consultar:
+-> valor total devido
+-> histórico de pedidos
+-> lista de clientes
+
+Sistema de Login:
+
+-> Cadastro de usuários
+-> Login utilizando usuário e senha
+
+Cadastro de Clientes:
+-> Nome
+-> Identificador do cliente
+-> telefone
+-> Histórico de compras
+-> Valor total da dívida
+
+registro de pedidos:
+O vendedor poderá -> 
+    ->selecionar o cliente
+    ->escolher os sabores de empada
+    ->informar quantidade
+    ->calcular valor total automaticamente
+
+Controle de Dívidas:
+O sistema atualizará automaticamente ->
+    -> valor devido do cliente
+    -> quantidade de pedidos realizados
+    -> histórico de compras
+
+Consulta de Clientes:
+Visualização de->
+    -> todos os clientes cadastrados
+    -> total da dívida de cada cliente
+    -> histórico de pedidos
+
+                    aplicação do conteudo no trabalho para cada etapa
+
+Lógica de Processo de Login:
+Será utilizada para-> 
+    -> autenticação de usuários
+    -> validação de senha
+
+
+hash -> As senhas dos usuários serão armazenadas utilizando função hash para aumentar a segurança do sistema.
+
+criptografia -> Dados importantes do cliente, como telefone, poderão ser armazenados utilizando criptografia simples.
+
+contagem combinatoria -> O sistema poderá calcular:
+                        -> quantidade de combinações possíveis de pedidos
+                        -> quantidade de combinações de sabores disponíveis
+
+                            Exemplo:
+
+                                -> escolha de 2 sabores entre vários disponíveis
+
+matriz -> Será utilizada uma matriz para armazenar:
+
+            -> quantidade de vendas por sabor
+            -> vendas realizadas em determinados períodos
+
+                Exemplo:
+
+                    ->  segunda(periodo da venda) -> carne: 5 (quantidade de vendas por sabor)
+
+recorrencia -> Funções recursivas poderão ser utilizadas para:
+
+                ->cálculo do valor total dos pedidos
+                ->percorrer histórico de compras 
+
+grafos -> Os grafos poderão representar:
+
+            -> relação entre clientes e sabores comprados
+            -> sabores mais consumidos(acho mais interessante)
+
+        Permitindo identificar:
+
+            -> padrões de compra
+            -> sabores mais populares
+
+                            estrutura do sistema
+
+menu principal -> 
+    ver tabela
+    login   
+    cadastro
+    sair
+
+Menu do Sistema -> 
+    Fazer pedido
+    Ver dívidas
+    Logout
