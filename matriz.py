@@ -1,7 +1,7 @@
 import json
 
 def carregar_restaurantes():
-    with open("restaurantes.json") as f:
+    with open("data/restaurantes.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
 def ranking_restaurantes(restaurante):
@@ -12,6 +12,6 @@ def filtrar_restaurantes(restaurante, categoria):
     filtro =[]
 
     for r in restaurante:
-        if r ["categoria"] == categoria:
+        if r ["tipo"] == categoria:
             filtro.append(r)
     return filtro
