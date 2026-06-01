@@ -26,7 +26,7 @@ usando as funcionalidades:
         ->senha do usuario
 
     criptografio:
-        ->oq da pra criptografar -> telefone, endereço e email
+        ->criptografa o cpf do cliente
 
     contagem combinatoria:
         ->combinação de pedidos
