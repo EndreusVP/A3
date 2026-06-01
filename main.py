@@ -1,10 +1,19 @@
 import tkinter as tk
 from tkinter import messagebox
 import login as login_module
+import cardapio as cardapio_module
+import carrinho as carrinho_module
+import recorrencia
+import grafos
+
+carrinho_atual = []
+restaurante_selecionado_id = None
+historico_pedidos = [] 
 
 janela = tk.Tk()
 janela.title("FoodRank")
-janela.geometry("500x400")
+janela.geometry("550x580") 
+
 
 def login():
     titulo.pack_forget()
@@ -51,7 +60,11 @@ def voltar():
     btn_cadastro.pack(pady=10)
 
 def voltar_restaurantes():
+    # Esconde a lista e campos de seleção
     lbl_restaurantes.pack_forget()
+    lbl_escolher_rest.pack_forget()
+    entrada_rest_id.pack_forget()
+    btn_ver_cardapio.pack_forget()
     btn_voltar_restaurantes.pack_forget()
 
     lbl_ranking.pack_forget()
@@ -67,10 +80,13 @@ def voltar_restaurantes():
     lbl_filtro_resultados.pack_forget()
     btn_voltar_resultados.pack_forget()
 
+    # Retorna ao Menu Principal
     lbl_bem_vindo.pack(pady=20)
     btn_todos_restaurantes.pack(pady=10)
     btn_ranking.pack(pady=10)
     btn_filtrar.pack(pady=10)
+    btn_ver_carrinho.pack(pady=10)
+    btn_recomendacoes.pack(pady=10)
 
 def cadastrar():
     titulo.pack_forget()
@@ -142,6 +158,8 @@ def entrar():
         btn_todos_restaurantes.pack(pady=10)
         btn_ranking.pack(pady=10)
         btn_filtrar.pack(pady=10)
+        btn_ver_carrinho.pack(pady=10)
+        btn_recomendacoes.pack(pady=10)
     else:
         messagebox.showerror("Erro de Login", mensagem)
 
@@ -150,18 +168,25 @@ def todos_restaurantes():
     btn_todos_restaurantes.pack_forget()
     btn_ranking.pack_forget()
     btn_filtrar.pack_forget()
+    btn_ver_carrinho.pack_forget()
+    btn_recomendacoes.pack_forget()
 
     try:
         import matriz
         restaurantes = matriz.carregar_restaurantes()
         texto = "Lista de Restaurantes:\n\n"
         for r in restaurantes:
-            texto += f"• {r['nome']} ({r['tipo']}) - Nota: {r['nota']}\n"
+            texto += f"[{r['id']}] {r['nome']} ({r['tipo']}) - Nota: {r['nota']}\n"
     except Exception as e:
         texto = f"Erro ao carregar restaurantes: {e}"
 
     lbl_restaurantes.config(text=texto)
-    lbl_restaurantes.pack(pady=20)
+    lbl_restaurantes.pack(pady=10)
+    
+    
+    lbl_escolher_rest.pack(pady=5)
+    entrada_rest_id.pack(pady=5)
+    btn_ver_cardapio.pack(pady=5)
     btn_voltar_restaurantes.pack(pady=10)
 
 def ranking():
@@ -169,6 +194,8 @@ def ranking():
     btn_todos_restaurantes.pack_forget()
     btn_ranking.pack_forget()
     btn_filtrar.pack_forget()
+    btn_ver_carrinho.pack_forget()
+    btn_recomendacoes.pack_forget()
 
     try:
         import matriz
@@ -189,6 +216,8 @@ def filtrar():
     btn_todos_restaurantes.pack_forget()
     btn_ranking.pack_forget()
     btn_filtrar.pack_forget()
+    btn_ver_carrinho.pack_forget()
+    btn_recomendacoes.pack_forget()
 
     lbl_filtro.pack(pady=20)
     btn_hamburgueria.pack(pady=5)
@@ -256,7 +285,183 @@ def voltar_resultados():
     btn_voltar_resultados.pack_forget()
     filtrar()
 
-# --- Configuração da Interface (Widgets) ---
+
+def abrir_cardapio():
+    global restaurante_selecionado_id
+    try:
+        rest_id = int(entrada_rest_id.get())
+    except ValueError:
+        messagebox.showerror("Erro", "Digite um ID numérico válido!")
+        return
+
+    import matriz
+    restaurantes = matriz.carregar_restaurantes()
+    restaurante = next((r for r in restaurantes if r["id"] == rest_id), None)
+    
+    if not restaurante:
+        messagebox.showerror("Erro", "Restaurante não encontrado!")
+        return
+        
+    restaurante_selecionado_id = rest_id
+    
+    # Esconde a lista de restaurantes
+    lbl_restaurantes.pack_forget()
+    lbl_escolher_rest.pack_forget()
+    entrada_rest_id.pack_forget()
+    btn_ver_cardapio.pack_forget()
+    btn_voltar_restaurantes.pack_forget()
+    
+    # Busca e formata o cardápio
+    itens = cardapio_module.buscar_itens_por_restaurante(rest_id)
+    texto = f"=== Cardápio do {restaurante['nome']} ===\n\n"
+    
+    if not itens:
+        texto += "Nenhum item cadastrado."
+    else:
+        for item in itens:
+            texto += f"[{item['id']}] {item['nome']} - R$ {item['preco']:.2f}\n"
+            
+    lbl_cardapio_itens.config(text=texto)
+    
+    # Mostra a tela do cardápio
+    lbl_cardapio_titulo.pack(pady=5)
+    lbl_cardapio_itens.pack(pady=10)
+    
+    lbl_item_id.pack()
+    entrada_item_id.pack(pady=2)
+    lbl_item_qtd.pack()
+    entrada_item_qtd.pack(pady=2)
+    
+    btn_adicionar_carrinho.pack(pady=10)
+    btn_voltar_cardapio.pack(pady=5)
+
+def adicionar_ao_carrinho():
+    try:
+        item_id = int(entrada_item_id.get())
+        qtd = int(entrada_item_qtd.get())
+    except ValueError:
+        messagebox.showerror("Erro", "ID e Quantidade devem ser numéricos!")
+        return
+
+    if qtd <= 0:
+        messagebox.showerror("Erro", "A quantidade deve ser maior que 0.")
+        return
+
+    produto = cardapio_module.buscar_item_por_id(item_id)
+    if produto is None or produto["restaurante_id"] != restaurante_selecionado_id:
+        messagebox.showerror("Erro", "Item não encontrado ou não pertence a este restaurante!")
+        return
+        
+    carrinho_module.adicionar_item(carrinho_atual, produto, qtd)
+    messagebox.showinfo("Sucesso", f"{qtd}x '{produto['nome']}' adicionado ao carrinho!")
+    
+    # Limpa as entradas
+    entrada_item_id.delete(0, tk.END)
+    entrada_item_qtd.delete(0, tk.END)
+
+def voltar_para_restaurantes_do_cardapio():
+    lbl_cardapio_titulo.pack_forget()
+    lbl_cardapio_itens.pack_forget()
+    lbl_item_id.pack_forget()
+    entrada_item_id.pack_forget()
+    lbl_item_qtd.pack_forget()
+    entrada_item_qtd.pack_forget()
+    btn_adicionar_carrinho.pack_forget()
+    btn_voltar_cardapio.pack_forget()
+    
+    # Recarrega a tela de restaurantes
+    todos_restaurantes()
+
+def abrir_carrinho():
+    # Esconde menu principal
+    lbl_bem_vindo.pack_forget()
+    btn_todos_restaurantes.pack_forget()
+    btn_ranking.pack_forget()
+    btn_filtrar.pack_forget()
+    btn_ver_carrinho.pack_forget()
+    btn_recomendacoes.pack_forget()
+    
+    if not carrinho_atual:
+        texto = "O seu carrinho está vazio."
+    else:
+        texto = ""
+        for item in carrinho_atual:
+            subtotal = item["preco"] * item["quantidade"]
+            texto += f"{item['nome']} | Qtd: {item['quantidade']} | R$ {subtotal:.2f}\n"
+            
+        total = recorrencia.calcular_total(carrinho_atual)
+        texto += f"\n--------------------------\nTOTAL: R$ {total:.2f}"
+        
+    lbl_carrinho_itens.config(text=texto)
+    
+    lbl_carrinho_titulo.pack(pady=10)
+    lbl_carrinho_itens.pack(pady=10)
+    btn_limpar_carrinho.pack(pady=5)
+    btn_finalizar_pedido.pack(pady=5)
+    btn_voltar_carrinho.pack(pady=10)
+
+def limpar_carrinho_ui():
+    carrinho_module.limpar_carrinho(carrinho_atual)
+    voltar_do_carrinho()
+    abrir_carrinho()
+    messagebox.showinfo("Aviso", "Carrinho esvaziado!")
+
+def finalizar_pedido():
+    global carrinho_atual, restaurante_selecionado_id, historico_pedidos
+    
+    if not carrinho_atual:
+        messagebox.showwarning("Aviso", "Seu carrinho está vazio!")
+        return
+        
+    total = recorrencia.calcular_total(carrinho_atual)
+    
+    # 1. Descobre o nome do restaurante atual
+    import matriz
+    restaurantes = matriz.carregar_restaurantes()
+    nome_restaurante_pedido = ""
+    for r in restaurantes:
+        if r["id"] == restaurante_selecionado_id:
+            nome_restaurante_pedido = r["nome"]
+            break
+            
+    # 2. Salva no histórico
+    if nome_restaurante_pedido:
+        historico_pedidos.append(nome_restaurante_pedido)
+
+    # 3. Limpa carrinho e avisa sucesso
+    carrinho_module.limpar_carrinho(carrinho_atual)
+    voltar_do_carrinho()
+    messagebox.showinfo("Sucesso", f"Pedido realizado com sucesso!\nValor pago: R$ {total:.2f}")
+    
+    # 4. Exibe recomendação usando Grafos
+    if nome_restaurante_pedido:
+        recomendacao_texto = grafos.recomendacao(nome_restaurante_pedido)
+        if recomendacao_texto != "Restaurante não encontrado.":
+            messagebox.showinfo("Recomendação Especial", recomendacao_texto)
+
+def voltar_do_carrinho():
+    lbl_carrinho_titulo.pack_forget()
+    lbl_carrinho_itens.pack_forget()
+    btn_limpar_carrinho.pack_forget()
+    btn_finalizar_pedido.pack_forget()
+    btn_voltar_carrinho.pack_forget()
+    
+    # Mostra o menu principal
+    lbl_bem_vindo.pack(pady=20)
+    btn_todos_restaurantes.pack(pady=10)
+    btn_ranking.pack(pady=10)
+    btn_filtrar.pack(pady=10)
+    btn_ver_carrinho.pack(pady=10)
+    btn_recomendacoes.pack(pady=10)
+
+def ver_recomendacoes():
+    if not historico_pedidos:
+        messagebox.showinfo("Recomendações", "Você ainda não fez nenhum pedido.\nFaça um pedido para recebermos suas preferências!")
+        return
+        
+    ultimo_pedido = historico_pedidos[-1]
+    recomendacao_texto = grafos.recomendacao(ultimo_pedido)
+    messagebox.showinfo("Baseado no seu último pedido", recomendacao_texto)
 
 # Menu Inicial
 titulo = tk.Label(janela, text="FoodRank", font=("Arial", 20))
@@ -295,16 +500,20 @@ lbl_bem_vindo = tk.Label(janela, text="Bem-vindo ao FoodRank!")
 btn_todos_restaurantes = tk.Button(janela, text="Todos os Restaurantes", command=todos_restaurantes)
 btn_ranking = tk.Button(janela, text="Ranking dos Restaurantes", command=ranking)
 btn_filtrar = tk.Button(janela, text="Filtrar por Categoria", command=filtrar)
+btn_ver_carrinho = tk.Button(janela, text="Meu Carrinho", command=abrir_carrinho)
+btn_recomendacoes = tk.Button(janela, text="Ver Recomendações", command=ver_recomendacoes)
 
 # Menu de Restaurantes (Lista)
 lbl_restaurantes = tk.Label(janela, text="Lista de Restaurantes") 
+lbl_escolher_rest = tk.Label(janela, text="Digite o ID do Restaurante para ver o cardápio:")
+entrada_rest_id = tk.Entry(janela)
+btn_ver_cardapio = tk.Button(janela, text="Ver Cardápio", command=abrir_cardapio)
 btn_voltar_restaurantes = tk.Button(janela, text="Voltar", command=voltar_restaurantes)
 
-# Menu de Ranking
+# Menu de Ranking e Filtros
 lbl_ranking = tk.Label(janela, text="Ranking dos Restaurantes")
 btn_voltar_ranking = tk.Button(janela, text="Voltar", command=voltar_restaurantes)
 
-# Menu Filtro
 lbl_filtro = tk.Label(janela, text="Filtrar por Categoria")
 btn_hamburgueria = tk.Button(janela, text="Hamburgueria", command=lambda: ranking_categoria("Hamburgueria"))
 btn_pizzaria = tk.Button(janela, text="Pizzaria", command=lambda: ranking_categoria("Pizzaria"))   
@@ -312,8 +521,24 @@ btn_sushi = tk.Button(janela, text="Sushi", command=lambda: ranking_categoria("S
 btn_churrascaria = tk.Button(janela, text="Churrascaria", command=lambda: ranking_categoria("Churrascaria"))
 btn_voltar_filtro = tk.Button(janela, text="Voltar", command=voltar_restaurantes)
 
-# Tela de Resultados do Filtro
 lbl_filtro_resultados = tk.Label(janela, text="")
 btn_voltar_resultados = tk.Button(janela, text="Voltar", command=voltar_resultados)
+
+# Widgets da Tela de Cardápio
+lbl_cardapio_titulo = tk.Label(janela, text="Cardápio", font=("Arial", 16))
+lbl_cardapio_itens = tk.Label(janela, text="")
+lbl_item_id = tk.Label(janela, text="ID do Produto:")
+entrada_item_id = tk.Entry(janela)
+lbl_item_qtd = tk.Label(janela, text="Quantidade:")
+entrada_item_qtd = tk.Entry(janela)
+btn_adicionar_carrinho = tk.Button(janela, text="Adicionar ao Carrinho", bg="lightblue", command=adicionar_ao_carrinho)
+btn_voltar_cardapio = tk.Button(janela, text="Voltar", command=voltar_para_restaurantes_do_cardapio)
+
+# Widgets da Tela de Carrinho
+lbl_carrinho_titulo = tk.Label(janela, text="Meu Carrinho", font=("Arial", 16))
+lbl_carrinho_itens = tk.Label(janela, text="", justify="left")
+btn_limpar_carrinho = tk.Button(janela, text="Limpar Carrinho", command=limpar_carrinho_ui)
+btn_finalizar_pedido = tk.Button(janela, text="Finalizar Pedido", bg="lightgreen", command=finalizar_pedido)
+btn_voltar_carrinho = tk.Button(janela, text="Voltar", command=voltar_do_carrinho)
 
 janela.mainloop()
