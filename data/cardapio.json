@@ -1,0 +1,177 @@
+[
+    {
+        "id": 1,
+        "restaurante_id": 1,
+        "nome": "Whopper",
+        "categoria": "Hamburguer",
+        "preco": 29.90
+    },
+    {
+        "id": 2,
+        "restaurante_id": 1,
+        "nome": "Batata Frita Média",
+        "categoria": "Acompanhamento",
+        "preco": 12.90
+    },
+    {
+        "id": 3,
+        "restaurante_id": 1,
+        "nome": "Refrigerante 500ml",
+        "categoria": "Bebida",
+        "preco": 8.90
+    },
+
+    {
+        "id": 4,
+        "restaurante_id": 2,
+        "nome": "Big Mac",
+        "categoria": "Hamburguer",
+        "preco": 27.90
+    },
+    {
+        "id": 5,
+        "restaurante_id": 2,
+        "nome": "McFritas Média",
+        "categoria": "Acompanhamento",
+        "preco": 11.90
+    },
+    {
+        "id": 6,
+        "restaurante_id": 2,
+        "nome": "Coca-Cola 500ml",
+        "categoria": "Bebida",
+        "preco": 8.50
+    },
+
+    {
+        "id": 7,
+        "restaurante_id": 3,
+        "nome": "Pizza Calabresa",
+        "categoria": "Pizza",
+        "preco": 49.90
+    },
+    {
+        "id": 8,
+        "restaurante_id": 3,
+        "nome": "Pizza Portuguesa",
+        "categoria": "Pizza",
+        "preco": 54.90
+    },
+    {
+        "id": 9,
+        "restaurante_id": 3,
+        "nome": "Refrigerante 2L",
+        "categoria": "Bebida",
+        "preco": 12.90
+    },
+
+    {
+        "id": 10,
+        "restaurante_id": 4,
+        "nome": "Pizza Frango com Catupiry",
+        "categoria": "Pizza",
+        "preco": 52.90
+    },
+    {
+        "id": 11,
+        "restaurante_id": 4,
+        "nome": "Pizza Quatro Queijos",
+        "categoria": "Pizza",
+        "preco": 56.90
+    },
+    {
+        "id": 12,
+        "restaurante_id": 4,
+        "nome": "Guaraná 2L",
+        "categoria": "Bebida",
+        "preco": 11.90
+    },
+
+    {
+        "id": 13,
+        "restaurante_id": 5,
+        "nome": "Combo 20 Peças",
+        "categoria": "Sushi",
+        "preco": 39.90
+    },
+    {
+        "id": 14,
+        "restaurante_id": 5,
+        "nome": "Temaki Salmão",
+        "categoria": "Temaki",
+        "preco": 24.90
+    },
+    {
+        "id": 15,
+        "restaurante_id": 5,
+        "nome": "Hot Roll 10 Peças",
+        "categoria": "Sushi",
+        "preco": 29.90
+    },
+
+    {
+        "id": 16,
+        "restaurante_id": 6,
+        "nome": "Combo 30 Peças",
+        "categoria": "Sushi",
+        "preco": 59.90
+    },
+    {
+        "id": 17,
+        "restaurante_id": 6,
+        "nome": "Temaki Filadélfia",
+        "categoria": "Temaki",
+        "preco": 27.90
+    },
+    {
+        "id": 18,
+        "restaurante_id": 6,
+        "nome": "Yakisoba de Frango",
+        "categoria": "Prato Quente",
+        "preco": 34.90
+    },
+
+    {
+        "id": 19,
+        "restaurante_id": 7,
+        "nome": "Picanha Completa",
+        "categoria": "Churrasco",
+        "preco": 69.90
+    },
+    {
+        "id": 20,
+        "restaurante_id": 7,
+        "nome": "Contra Filé Completo",
+        "categoria": "Churrasco",
+        "preco": 59.90
+    },
+    {
+        "id": 21,
+        "restaurante_id": 7,
+        "nome": "Guaraná Lata",
+        "categoria": "Bebida",
+        "preco": 6.90
+    },
+
+    {
+        "id": 22,
+        "restaurante_id": 8,
+        "nome": "Marmita de Churrasco",
+        "categoria": "Churrasco",
+        "preco": 34.90
+    },
+    {
+        "id": 23,
+        "restaurante_id": 8,
+        "nome": "Espetinho de Alcatra",
+        "categoria": "Churrasco",
+        "preco": 12.90
+    },
+    {
+        "id": 24,
+        "restaurante_id": 8,
+        "nome": "Refrigerante Lata",
+        "categoria": "Bebida",
+        "preco": 6.50
+    }
+]
