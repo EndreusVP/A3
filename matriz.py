@@ -8,6 +8,14 @@ def ranking_restaurantes(restaurante):
     restaurante = sorted(restaurante, key=lambda r: r ["nota"], reverse=True)
     return restaurante
 
+def ranking_categoria(restaurante, categoria):
+    restaurante = sorted(restaurante, key=lambda r: r["nota"], reverse=True)
+    categoria_res = []
+    for r in restaurante:
+        if r["tipo"] == categoria:
+            categoria_res.append(r)
+    return categoria_res
+
 def filtrar_restaurantes(restaurante, categoria):
     filtro =[]
 

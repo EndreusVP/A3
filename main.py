@@ -208,7 +208,6 @@ def exibir_categoria(categoria):
     try:
         import matriz
         restaurantes = matriz.carregar_restaurantes()
-        # Trata a categoria "sushi" minúscula do arquivo JSON
         categoria_busca = "sushi" if categoria.lower() == "sushi" else categoria
         filtrados = matriz.filtrar_restaurantes(restaurantes, categoria_busca)
         
@@ -220,6 +219,33 @@ def exibir_categoria(categoria):
                 texto += f"• {r['nome']} - Nota: {r['nota']}\n"
     except Exception as e:
         texto = f"Erro ao filtrar restaurantes: {e}"
+
+    lbl_filtro_resultados.config(text=texto)
+    lbl_filtro_resultados.pack(pady=20)
+    btn_voltar_resultados.pack(pady=10)
+
+def ranking_categoria(categoria):
+    lbl_filtro.pack_forget()
+    btn_hamburgueria.pack_forget()
+    btn_pizzaria.pack_forget()
+    btn_sushi.pack_forget()
+    btn_churrascaria.pack_forget()
+    btn_voltar_filtro.pack_forget()
+
+    try:
+        import matriz
+        restaurantes = matriz.carregar_restaurantes()
+        categoria_busca = "sushi" if categoria.lower() == "sushi" else categoria
+        ordenados = matriz.ranking_categoria(restaurantes, categoria_busca)
+        
+        texto = f"Ranking - {categoria}:\n\n"
+        if not ordenados:
+            texto += "Nenhum restaurante encontrado."
+        else:
+            for i, r in enumerate(ordenados, 1):
+                texto += f"{i}º - {r['nome']} - Nota: {r['nota']}\n"
+    except Exception as e:
+        texto = f"Erro ao carregar ranking: {e}"
 
     lbl_filtro_resultados.config(text=texto)
     lbl_filtro_resultados.pack(pady=20)
@@ -280,10 +306,10 @@ btn_voltar_ranking = tk.Button(janela, text="Voltar", command=voltar_restaurante
 
 # Menu Filtro
 lbl_filtro = tk.Label(janela, text="Filtrar por Categoria")
-btn_hamburgueria = tk.Button(janela, text="Hamburgueria", command=lambda: exibir_categoria("Hamburgueria"))
-btn_pizzaria = tk.Button(janela, text="Pizzaria", command=lambda: exibir_categoria("Pizzaria"))   
-btn_sushi = tk.Button(janela, text="Sushi", command=lambda: exibir_categoria("Sushi")) 
-btn_churrascaria = tk.Button(janela, text="Churrascaria", command=lambda: exibir_categoria("Churrascaria"))
+btn_hamburgueria = tk.Button(janela, text="Hamburgueria", command=lambda: ranking_categoria("Hamburgueria"))
+btn_pizzaria = tk.Button(janela, text="Pizzaria", command=lambda: ranking_categoria("Pizzaria"))   
+btn_sushi = tk.Button(janela, text="Sushi", command=lambda: ranking_categoria("Sushi")) 
+btn_churrascaria = tk.Button(janela, text="Churrascaria", command=lambda: ranking_categoria("Churrascaria"))
 btn_voltar_filtro = tk.Button(janela, text="Voltar", command=voltar_restaurantes)
 
 # Tela de Resultados do Filtro
