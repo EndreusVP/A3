@@ -1,0 +1,50 @@
+[
+    {
+        "nome": "Burguer King",
+        "tipo": "Hamburgueria",
+        "nota": 4.5
+    },
+
+        {
+        "nome": "McDonald's",
+        "tipo": "Hamburgueria",
+        "nota": 4.1
+    },
+
+
+    {
+        "nome": "Pizza Hut",
+        "tipo": "Pizzaria",
+        "nota": 4.0 
+    },
+
+    {
+        "nome": "Pizza Vip",
+        "tipo": "Pizzaria",
+        "nota": 4.7
+    },
+
+    {
+        "nome": "Sushi House",
+        "tipo": "sushi",
+        "nota": 4.8
+    },
+
+    {
+        "nome": "Japinha do Beco",
+        "tipo": "sushi",
+        "nota": 5.0
+    },
+
+    {
+        "nome": "Churrascaria Boi na Brasa",
+        "tipo": "Churrascaria",
+        "nota": 4.2
+    },
+
+    {
+        "nome": "Churrascaria do Zé",
+        "tipo": "Churrascaria",
+        "nota": 4.6
+    }
+]
